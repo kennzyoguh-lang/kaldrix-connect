@@ -1,14 +1,35 @@
 # Kaldrix and Zentrix connector
 
-**Let your AI assistant pay suppliers, inside limits you signed.**
+**Agentic authorization, security and payments.** Let your AI assistant pay suppliers, inside limits you signed.
 
-One connector, both products: **Kaldrix** is the signed, limited permission (who may pay whom, how much, until when). **Zentrix** is the payment desk behind it: it checks Kaldrix's yes again on its own, applies its own limits, never pays twice, and sends the payment.
+An AI agent that can spend money is only safe if the limit lives *outside* the agent. If the limit is just a rule in its prompt, one clever message can talk it out of the rule. Kaldrix puts the limit in a **signed permission**, and the payment desk checks that signature again at the moment of paying.
 
-You give the assistant a permission: *this supplier, this much, until this time.* A big payment waits for you. The assistant can not widen the permission, approve its own payment, or cancel anything. If it is tricked or hijacked, the money still does not move past what you allowed.
+> **You tell the assistant: "this supplier, this much, until this time." A big payment waits for you. Even if the assistant is tricked or hijacked, the money does not move past what you signed.**
+
+## What you get
+
+| | |
+|---|---|
+| **Kaldrix** (the permission) | A signed, limited permission: who may be paid, how much per payment and in all, for what purpose, until when. It can only be narrowed when passed on, never widened. You can cancel it at any moment. |
+| **Zentrix** (the payment desk) | Checks Kaldrix's yes again on its own, applies its own limits, never pays the same invoice twice, and tells the truth when the bank has not answered ("unknown", never a guess). |
+| **This connector** | Lets Claude, Cursor, Copilot, Codex and other MCP assistants use both. The assistant holds its own key; only signatures leave your computer. |
+
+## How this is different
+
+* **The proof is tied to the payment.** Each payment needs its own signature over the exact amount, supplier and currency. A proof made for N200 cannot be stretched to pay N450.
+* **The assistant cannot grant itself anything.** Its key can pay and read payments, nothing else: no new suppliers, no new permissions, no approving its own payment. The service enforces that, not this program.
+* **Humans stay in the loop where it matters.** Above an amount you choose, a named person (or two) must approve that exact payment.
+* **Built for places where banks are slow and unreliable.** Zentrix is designed first for emerging markets (Nigeria first): it will not pay twice when a bank times out, and it fails over to another provider only when it is certain nothing was sent.
+
+You can see all of this yourself in the test service: the dashboard has an agent that tries to cheat, and every attempt is refused with a plain reason.
 
 > **This is a test service. It is a pretend bank: no real money moves.** It is a first version with no independent security review. Read [SECURITY.md](SECURITY.md).
 
 Works with assistants that speak [MCP](https://modelcontextprotocol.io): Claude (Code and Desktop), Cursor, GitHub Copilot in VS Code, Codex and others. ChatGPT needs a hosted connector, which is not built yet.
+
+## Work with us
+
+Building agents that touch money, or running a payments, banking or AI platform? We want to hear what would make this safe enough for you. Open an issue on this repository titled **"Let's talk"** and say who you are and what you are building.
 
 ## Try it in five minutes
 
