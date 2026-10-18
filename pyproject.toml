@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kaldrix-connect"
+version = "0.1.0"
+description = "The Kaldrix and Zentrix connector: lets an AI assistant (Claude, Copilot, Cursor, Codex and others that speak MCP) pay with a limited, signed Kaldrix permission. Test service: no real money."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["mcp>=1.2", "cryptography>=42"]
+license = { file = "NOTICE.md" }
+authors = [{ name = "Kaldrix" }]
+
+[project.scripts]
+kaldrix-connect = "kaldrix_connect.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

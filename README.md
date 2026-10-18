@@ -1,0 +1,66 @@
+# Kaldrix and Zentrix connector
+
+**Let your AI assistant pay suppliers, inside limits you signed.**
+
+One connector, both products: **Kaldrix** is the signed, limited permission (who may pay whom, how much, until when). **Zentrix** is the payment desk behind it: it checks Kaldrix's yes again on its own, applies its own limits, never pays twice, and sends the payment.
+
+You give the assistant a permission: *this supplier, this much, until this time.* A big payment waits for you. The assistant can not widen the permission, approve its own payment, or cancel anything. If it is tricked or hijacked, the money still does not move past what you allowed.
+
+> **This is a test service. It is a pretend bank: no real money moves.** It is a first version with no independent security review. Read [SECURITY.md](SECURITY.md).
+
+Works with assistants that speak [MCP](https://modelcontextprotocol.io): Claude (Code and Desktop), Cursor, GitHub Copilot in VS Code, Codex and others. ChatGPT needs a hosted connector, which is not built yet.
+
+## Try it in five minutes
+
+1. **Make a test account** at **https://kaldrix-sandbox.fly.dev** (read and accept the testing agreement; save the key it shows once). Add a supplier.
+2. In the dashboard, open **5. Connect your own AI assistant** and **make a key for my AI assistant**. This key can only pay and read payments. Save it.
+3. **Install the connector** (below) with that key.
+4. Ask your assistant: **"Who am I with Kaldrix?"** It makes its own signing key and tells you its public key.
+5. In the dashboard, step 3 → *Use my own agent's key instead* → paste that public key → give it a permission. **Copy the permission** that appears and give it to your assistant ("add this permission"). Nothing about it is secret: it is useless without the assistant's private key.
+6. Ask it to pay a supplier. A payment above your approval amount waits in the dashboard's **Waiting for you** box. Approve it, then ask again.
+
+## Install
+
+You need [`uv`](https://docs.astral.sh/uv/) (it runs the connector straight from this repository). Replace `kz_YOUR_AGENT_KEY` with the key from step 2.
+
+**Claude Code** (as a plugin, with the skill and the `/kaldrix-start` command):
+
+```
+/plugin marketplace add kennzyoguh-lang/kaldrix-connect
+/plugin install kaldrix@kaldrix
+```
+
+Set `KALDRIX_AGENT_KEY` in your environment first. Or add only the connector:
+
+```
+claude mcp add kaldrix -e KALDRIX_AGENT_KEY=kz_YOUR_AGENT_KEY -- uvx --from git+https://github.com/kennzyoguh-lang/kaldrix-connect kaldrix-connect
+```
+
+**Other assistants** use the same three pieces: the command `uvx`, the arguments `--from git+https://github.com/kennzyoguh-lang/kaldrix-connect kaldrix-connect`, and the environment setting `KALDRIX_AGENT_KEY`. See [docs/INSTALL.md](docs/INSTALL.md) for Claude Desktop, Cursor, VS Code (Copilot) and Codex.
+
+## What the assistant can do
+
+| Tool | What it does |
+|---|---|
+| `kaldrix_who_am_i` | Start here: the agent's public key, what is ready, what to do next |
+| `kaldrix_add_permission` | Store a permission you gave it (only if it was made for this agent) |
+| `kaldrix_permissions` | What it may pay, how much, until when |
+| `kaldrix_suppliers` | Who can be paid |
+| `kaldrix_pay` | Pay inside a permission: Kaldrix decides, Zentrix checks again and pays; a refusal comes back as plain words |
+| `kaldrix_payment_status`, `kaldrix_payments` | Where payments stand |
+
+## What it can never do
+
+Make suppliers or permissions, approve or refuse a payment, cancel a permission, or make or read other keys. The Kaldrix service enforces this, not this program.
+
+## Settings
+
+| Setting | What it is |
+|---|---|
+| `KALDRIX_AGENT_KEY` | The limited key you made in step 2 |
+| `KALDRIX_URL` | The service address (default: the public test service) |
+| `KALDRIX_HOME` | Where the agent's own key and permissions are kept (default `~/.kaldrix`) |
+
+## Rights
+
+All rights reserved. You may read this and use it with the Kaldrix service; see [NOTICE.md](NOTICE.md). It is not open source.

@@ -1,0 +1,22 @@
+{
+  "name": "kaldrix",
+  "version": "0.1.0",
+  "description": "Kaldrix and Zentrix for your AI assistant. Kaldrix is the signed, limited permission; Zentrix is the payment desk that checks it again and pays. A person sets the limits; the assistant cannot widen them or approve its own payment. Test service: no real money.",
+  "author": { "name": "Kaldrix", "url": "https://kaldrix-sandbox.fly.dev" },
+  "homepage": "https://kaldrix-sandbox.fly.dev",
+  "repository": "https://github.com/kennzyoguh-lang/kaldrix-connect",
+  "license": "LicenseRef-Kaldrix-Proprietary",
+  "keywords": ["kaldrix", "zentrix", "payments", "agents", "mcp", "authorization", "permissions"],
+  "mcpServers": {
+    "kaldrix": {
+      "command": "uvx",
+      "args": ["--from", "git+https://github.com/kennzyoguh-lang/kaldrix-connect", "kaldrix-connect"],
+      "env": {
+        "KALDRIX_AGENT_KEY": "${KALDRIX_AGENT_KEY}",
+        "KALDRIX_URL": "${KALDRIX_URL:-https://kaldrix-sandbox.fly.dev}"
+      }
+    }
+  },
+  "skills": ["./skills/"],
+  "commands": ["./commands/"]
+}
