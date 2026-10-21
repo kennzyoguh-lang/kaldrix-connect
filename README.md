@@ -11,7 +11,7 @@ An AI agent that can spend money is only safe if the limit lives *outside* the a
 | | |
 |---|---|
 | **Kaldrix** (the permission) | A signed, limited permission: who may be paid, how much per payment and in all, for what purpose, until when. It can only be narrowed when passed on, never widened. You can cancel it at any moment. |
-| **Zentrix** (the payment desk) | Checks Kaldrix's yes again on its own, applies its own limits, never pays the same invoice twice, and tells the truth when the bank has not answered ("unknown", never a guess). |
+| **Zentrix** (the conditional escrow and execution clearinghouse) | Moves money only when the agent proves it stayed inside its exact instructions. It checks Kaldrix's yes again on its own, applies its own limits, never pays the same invoice twice, tells the truth when the bank has not answered ("unknown", never a guess), and returns a **signed proof envelope** with every payment: who held the permission, the exact amount, supplier and purpose, and the time limits. |
 | **This connector** | Lets Claude, Cursor, Copilot, Codex and other MCP assistants use both. The assistant holds its own key; only signatures leave your computer. |
 
 ## How this is different
@@ -21,7 +21,9 @@ An AI agent that can spend money is only safe if the limit lives *outside* the a
 * **Humans stay in the loop where it matters.** Above an amount you choose, a named person (or two) must approve that exact payment.
 * **Built for places where banks are slow and unreliable.** Zentrix is designed first for emerging markets (Nigeria first): it will not pay twice when a bank times out, and it fails over to another provider only when it is certain nothing was sent.
 
-You can see all of this yourself in the test service: the dashboard has an agent that tries to cheat, and every attempt is refused with a plain reason.
+You can see all of this yourself in the test service: press **Run the demo for me** and an agent gets a limit, pays, tries to cheat (every attempt is refused with a plain reason), and waits for you to approve a big payment. Product site and a 3-minute video: https://kennzyoguh-lang.github.io/kaldrix-zentrix/ . Built by [Oguh Chidiebube Kenneth](https://kennzyoguh-lang.github.io/).
+
+**What is built and what is not:** the signed limits, approvals, two-step checks and the proof envelope work in the test service. A locked escrow vault for multi-step tasks, M-Pesa and PIX settlement, and integrations with open agent-payment protocols are designed or planned, not built. No partnership with any company is claimed.
 
 > **This is a test service. It is a pretend bank: no real money moves.** It is a first version with no independent security review. Read [SECURITY.md](SECURITY.md).
 
