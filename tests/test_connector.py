@@ -14,12 +14,12 @@ NOW = 1_790_000_000_000
 VECTOR = (
     "00000000000000146b616c647269782e746f6b656e2e7573652e763200000000000000116361705f6465765f746573745f30303031000000000000001865633635633837393865636639353930323431336334"
     "306600000000000000117061796d656e74732e696e69746961746500000000000000207061796d656e74733a726563697069656e743a6465765f746573742d61636d65010000000000000010737570706c696572"
-    "5f7061796d656e740100000000000000034e474e00000000000138800000000000000010000102030405060708090a0b0c0d0e0f000001a0c4506c00"
+    "5f7061796d656e7401000000000000000355534400000000000138800000000000000010000102030405060708090a0b0c0d0e0f000001a0c4506c00"
 )
 
 
 def token(agent_pub="aa" * 32, recipients=("dev_x-acme",), purpose="supplier_payment", per=100_000, total=300_000, approval=50_000, expires=NOW + 3_600_000, not_before=NOW - 1_000):
-    spend = {"currency": "NGN", "max_minor": per}
+    spend = {"currency": "USD", "max_minor": per}
     if total is not None:
         spend["max_total_minor"] = total
     if approval is not None:
@@ -31,7 +31,7 @@ def token(agent_pub="aa" * 32, recipients=("dev_x-acme",), purpose="supplier_pay
 class Proof(unittest.TestCase):
     def test_the_proof_message_is_exactly_the_published_one(self):
         t = {"id": "cap_dev_test_0001", "blocks": [{"signature": "ab" * 64}]}
-        msg = proof.proof_message(t, "payments:recipient:dev_test-acme", "supplier_payment", 80000, "NGN", bytes(range(16)), 1_790_000_000_000)
+        msg = proof.proof_message(t, "payments:recipient:dev_test-acme", "supplier_payment", 80000, "USD", bytes(range(16)), 1_790_000_000_000)
         self.assertEqual(msg.hex(), VECTOR)
 
     def test_a_proof_is_signed_by_the_agent_and_differs_each_time(self):
@@ -41,9 +41,9 @@ class Proof(unittest.TestCase):
         b = proof.sign_proof(key, t, "dev_x-acme", "supplier_payment", 30_000, now_ms=NOW)
         self.assertNotEqual(a["nonce"], b["nonce"])
         # the signature verifies against the agent's public key, for exactly this payment
-        msg = proof.proof_message(t, "payments:recipient:dev_x-acme", "supplier_payment", 30_000, "NGN", bytes.fromhex(a["nonce"]), a["issued_at_ms"])
+        msg = proof.proof_message(t, "payments:recipient:dev_x-acme", "supplier_payment", 30_000, "USD", bytes.fromhex(a["nonce"]), a["issued_at_ms"])
         key.public_key().verify(bytes.fromhex(a["signature"]), msg)
-        other = proof.proof_message(t, "payments:recipient:dev_x-acme", "supplier_payment", 90_000, "NGN", bytes.fromhex(a["nonce"]), a["issued_at_ms"])
+        other = proof.proof_message(t, "payments:recipient:dev_x-acme", "supplier_payment", 90_000, "USD", bytes.fromhex(a["nonce"]), a["issued_at_ms"])
         with self.assertRaises(Exception):
             key.public_key().verify(bytes.fromhex(a["signature"]), other)  # a proof for N300 does not pay N900
 

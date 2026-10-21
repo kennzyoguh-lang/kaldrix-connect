@@ -51,9 +51,9 @@ async def main(base):
     s, v = http(base, "POST", "/api/sandbox/v1/signup", body={"name": "connector e2e", "accept_terms": True, "terms_version": AGREEMENT})
     check("signs up", s == 201, f"HTTP {s}")
     dev_key = v["api_key"]
-    s, v = http(base, "POST", "/api/sandbox/v1/recipients", dev_key, {"label": "acme", "name": "Acme Supplies", "bank_code": "057", "account_last4": "4821"})
+    s, v = http(base, "POST", "/api/sandbox/v1/recipients", dev_key, {"label": "acme", "name": "Acme Supplies", "bank_code": "123456789", "account_last4": "4821"})
     acme = v["recipient"]["id"]
-    s, v = http(base, "POST", "/api/sandbox/v1/recipients", dev_key, {"label": "other", "name": "Unlisted Traders", "bank_code": "058", "account_last4": "9902"})
+    s, v = http(base, "POST", "/api/sandbox/v1/recipients", dev_key, {"label": "other", "name": "Unlisted Traders", "bank_code": "123456780", "account_last4": "9902"})
     other = v["recipient"]["id"]
     s, v = http(base, "POST", "/api/sandbox/v1/agent-keys", dev_key, {"label": "e2e assistant"})
     check("makes a limited key for the assistant", s == 201, f"HTTP {s}")
@@ -79,13 +79,13 @@ async def main(base):
         wrong = await tool(session, "kaldrix_add_permission", permission_json="not json")
         check("it refuses something that is not a permission", wrong["ok"] is False)
         added = await tool(session, "kaldrix_add_permission", permission_json=json.dumps(token))
-        check("it stores the permission", added["ok"] and added["stored"]["most_per_payment"] == "N1,000.00", json.dumps(added.get("stored", {}).get("may_pay")))
+        check("it stores the permission", added["ok"] and added["stored"]["most_per_payment"] == "$1,000.00", json.dumps(added.get("stored", {}).get("may_pay")))
         listed = await tool(session, "kaldrix_suppliers")
         check("it can see the account's suppliers", {x["id"] for x in listed["suppliers"]} == {acme, other})
 
         print("The assistant does its job, then tries to cheat:")
         ok = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=300, purpose="supplier_payment", invoice_reference="inv-2")
-        check("pays N300", ok["paid"] is True and ok["state"] in ("successful", "pending"), f"{ok.get('state')}")
+        check("pays $300", ok["paid"] is True and ok["state"] in ("successful", "pending"), f"{ok.get('state')}")
         again = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=300, purpose="supplier_payment", invoice_reference="inv-2")
         check("asking again for the same invoice is the same payment, not a second", again["paid"] is False and again["reason"] == "replayed")
         for label, kwargs in [

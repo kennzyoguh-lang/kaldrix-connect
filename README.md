@@ -16,7 +16,7 @@ An AI agent that can spend money is only safe if the limit lives *outside* the a
 
 ## How this is different
 
-* **The proof is tied to the payment.** Each payment needs its own signature over the exact amount, supplier and currency. A proof made for N200 cannot be stretched to pay N450.
+* **The proof is tied to the payment.** Each payment needs its own signature over the exact amount, supplier and currency. A proof made for $200 cannot be stretched to pay $450.
 * **The assistant cannot grant itself anything.** Its key can pay and read payments, nothing else: no new suppliers, no new permissions, no approving its own payment. The service enforces that, not this program.
 * **Humans stay in the loop where it matters.** Above an amount you choose, a named person (or two) must approve that exact payment.
 * **Built for places where banks are slow and unreliable.** Zentrix is designed first for emerging markets (Nigeria first): it will not pay twice when a bank times out, and it fails over to another provider only when it is certain nothing was sent.

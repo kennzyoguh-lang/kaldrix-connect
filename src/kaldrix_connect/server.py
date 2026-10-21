@@ -122,7 +122,7 @@ def kaldrix_pay(recipient: str, amount_naira: float, purpose: str, invoice_refer
         "token": token,
         "presenter": core.leaf(token)["subject"],
         "proof": proof.sign_proof(key, token, recipient, purpose, minor, now_ms=now),
-        "intent": {"amount_minor": minor, "currency": "NGN", "recipient": recipient, "purpose": purpose, "client_reference": invoice_reference, "idempotency_key": core.payment_number(recipient, minor, purpose, invoice_reference)},
+        "intent": {"amount_minor": minor, "currency": "USD", "recipient": recipient, "purpose": purpose, "client_reference": invoice_reference, "idempotency_key": core.payment_number(recipient, minor, purpose, invoice_reference)},
     }
     status, resp = core.call(_base(), _key(), "POST", "/api/v1/authorized-payments", body)
     return json.dumps(core.summarise(status, resp), indent=2)

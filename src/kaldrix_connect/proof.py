@@ -61,7 +61,7 @@ def proof_message(token: dict, resource: str, purpose, amount_minor: int, curren
     )
 
 
-def sign_proof(key: Ed25519PrivateKey, token: dict, recipient_id: str, purpose, amount_minor: int, currency: str = "NGN", now_ms=None) -> dict:
+def sign_proof(key: Ed25519PrivateKey, token: dict, recipient_id: str, purpose, amount_minor: int, currency: str = "USD", now_ms=None) -> dict:
     nonce = os.urandom(16)
     at = int(time.time() * 1000) if now_ms is None else now_ms
     msg = proof_message(token, f"payments:recipient:{recipient_id}", purpose, amount_minor, currency, nonce, at)
