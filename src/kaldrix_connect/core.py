@@ -8,7 +8,7 @@ import time
 import urllib.error
 import urllib.request
 
-DEFAULT_URL = "https://kaldrix-sandbox.fly.dev"
+DEFAULT_URL = "https://kaldrix-sandbox.onrender.com"
 
 # This computer's clock against the service's. A permission starts and ends by the service's clock, and a proof carries a time the service
 # must accept, so the connector uses the service's time, not this computer's: a clock that is a little slow or fast must not make a fresh

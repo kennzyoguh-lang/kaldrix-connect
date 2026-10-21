@@ -1,6 +1,6 @@
 """The connector, end to end, through the real MCP protocol, against a running Kaldrix test service.
 
-    python tests/e2e_against_a_server.py https://kaldrix-sandbox.fly.dev
+    python tests/e2e_against_a_server.py https://kaldrix-sandbox.onrender.com
 
 It plays both people: the developer (signs up, makes a supplier, a limited agent key, and a permission) and the AI assistant (the connector,
 started the way an assistant would start it, and called over MCP). Every step says what it expected; the exit code is non-zero if anything

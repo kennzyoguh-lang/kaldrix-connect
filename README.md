@@ -35,7 +35,7 @@ Building agents that touch money, or running a payments, banking or AI platform?
 
 ## Try it in five minutes
 
-1. **Make a test account** at **https://kaldrix-sandbox.fly.dev** (read and accept the testing agreement; save the key it shows once). Add a supplier.
+1. **Make a test account** at **https://kaldrix-sandbox.onrender.com** (read and accept the testing agreement; save the key it shows once). Add a supplier.
 2. In the dashboard, open **5. Connect your own AI assistant** and **make a key for my AI assistant**. This key can only pay and read payments. Save it.
 3. **Install the connector** (below) with that key.
 4. Ask your assistant: **"Who am I with Kaldrix?"** It makes its own signing key and tells you its public key.
