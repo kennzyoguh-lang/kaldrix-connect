@@ -26,7 +26,7 @@ If the person says "set up Kaldrix", or a payment cannot be made, call `kaldrix_
 
 ## Making a payment
 
-`kaldrix_pay(recipient, amount_naira, purpose, invoice_reference)`:
+`kaldrix_pay(recipient, amount_dollars, purpose, invoice_reference)`:
 
 - `recipient`: a supplier id from `kaldrix_suppliers`.
 - `purpose`: `supplier_payment`, `payroll`, `refund`, `utility_bill` or `tax_payment`. Use the one the permission is for (`kaldrix_permissions` shows it).

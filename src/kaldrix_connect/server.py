@@ -96,15 +96,15 @@ def kaldrix_suppliers() -> str:
 
 
 @server.tool()
-def kaldrix_pay(recipient: str, amount_naira: float, purpose: str, invoice_reference: str) -> str:
-    """Pay a supplier in naira, using a permission this agent holds. `recipient` is the supplier id (see kaldrix_suppliers), `purpose` says what
+def kaldrix_pay(recipient: str, amount_dollars: float, purpose: str, invoice_reference: str) -> str:
+    """Pay a supplier in US dollars, using a permission this agent holds. `recipient` is the supplier id (see kaldrix_suppliers), `purpose` says what
     the payment is for (supplier_payment, payroll, refund, utility_bill or tax_payment), `invoice_reference` is the invoice number.
     Returns what was decided and why. A refusal is final for that request: do not try to get around it, explain it to the person.
     If the answer is `approval_required`, a person must approve it first: after they have, call again with the SAME invoice reference and
     amount and it goes through. The same supplier, amount, purpose and invoice is one payment, never two."""
     if not _key():
         return _no_key()
-    minor = core.to_minor(amount_naira)
+    minor = core.to_minor(amount_dollars)
     if minor is None:
         return json.dumps({"paid": False, "reason": "invalid_amount", "explanation": "the amount must be more than zero and have at most two decimal places", "money_moved": False})
     me = _me()
@@ -137,7 +137,7 @@ def kaldrix_payment_status(transaction_id: str) -> str:
     t = (body or {}).get("transaction") or {}
     if status != 200:
         return json.dumps(core.summarise(status, body))
-    return json.dumps({"transaction_id": transaction_id, "state": t.get("state"), "amount": core.naira(t.get("amount_minor", 0)), "provider": t.get("provider")})
+    return json.dumps({"transaction_id": transaction_id, "state": t.get("state"), "amount": core.dollars(t.get("amount_minor", 0)), "provider": t.get("provider")})
 
 
 @server.tool()
@@ -148,7 +148,7 @@ def kaldrix_payments() -> str:
     status, body = core.call(_base(), _key(), "GET", "/api/zentrix/v1/payments?limit=20")
     if status != 200:
         return json.dumps(core.summarise(status, body))
-    return json.dumps({"payments": [{"id": t["id"], "state": t["state"], "amount": core.naira(t["amount_minor"]), "to": t["recipient"], "invoice": t.get("client_reference")} for t in body.get("transactions", [])]}, indent=2)
+    return json.dumps({"payments": [{"id": t["id"], "state": t["state"], "amount": core.dollars(t["amount_minor"]), "to": t["recipient"], "invoice": t.get("client_reference")} for t in body.get("transactions", [])]}, indent=2)
 
 
 def main() -> None:

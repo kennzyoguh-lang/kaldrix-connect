@@ -38,17 +38,17 @@ def server_now_ms(base: str) -> int:
     return int(time.time() * 1000) + _clock["offset_ms"]  # read now, after any network call above
 
 
-def naira(minor) -> str:
-    return "N" + format(int(minor) / 100, ",.2f")
+def dollars(minor) -> str:
+    return "$" + format(int(minor) / 100, ",.2f")
 
 
-def to_minor(amount_naira):
-    """Naira to kobo, only if it is a positive amount with at most two decimal places; otherwise None. Money is never rounded."""
+def to_minor(amount_dollars):
+    """Dollars to cents, only if it is a positive amount with at most two decimal places; otherwise None. Money is never rounded."""
     try:
-        minor = round(float(amount_naira) * 100)
+        minor = round(float(amount_dollars) * 100)
     except (TypeError, ValueError):
         return None
-    if minor <= 0 or abs(float(amount_naira) * 100 - minor) > 1e-6:
+    if minor <= 0 or abs(float(amount_dollars) * 100 - minor) > 1e-6:
         return None
     return minor
 
@@ -73,9 +73,9 @@ def describe(token: dict, now_ms=None) -> dict:
         "for_agent": g["subject"],
         "may_pay": [r.replace("payments:recipient:", "") for r in resources],
         "purpose": sc.get("purpose"),
-        "most_per_payment": naira(spend["max_minor"]) if "max_minor" in spend else None,
-        "most_in_all": naira(spend["max_total_minor"]) if spend.get("max_total_minor") is not None else None,
-        "a_person_must_approve_above": naira(spend["approval_above_minor"]) if spend.get("approval_above_minor") is not None else None,
+        "most_per_payment": dollars(spend["max_minor"]) if "max_minor" in spend else None,
+        "most_in_all": dollars(spend["max_total_minor"]) if spend.get("max_total_minor") is not None else None,
+        "a_person_must_approve_above": dollars(spend["approval_above_minor"]) if spend.get("approval_above_minor") is not None else None,
         "valid_until_ms": sc.get("expires_at_ms"),
         "expired": sc.get("expires_at_ms") is not None and sc["expires_at_ms"] <= now,
         "not_started": sc.get("not_before_ms") is not None and sc["not_before_ms"] > now + START_GRACE_MS,
@@ -109,7 +109,7 @@ def choose(tokens: list, my_public_hex: str, recipient_id: str, purpose: str, am
         elif sc.get("purpose") is not None and sc["purpose"] != purpose:
             why.append(f"{t['id']}: is for {sc['purpose']}, not {purpose}")
         elif (sc.get("spend") or {}).get("max_minor") is not None and amount_minor > sc["spend"]["max_minor"]:
-            why.append(f"{t['id']}: allows at most {naira(sc['spend']['max_minor'])} a payment")
+            why.append(f"{t['id']}: allows at most {dollars(sc['spend']['max_minor'])} a payment")
         else:
             return t, []
     return None, why
@@ -141,7 +141,7 @@ def summarise(status: int, body: dict) -> dict:
             return {"paid": False, "decided_by": "Zentrix, from its record of the first time", "reason": "replayed", "transaction_id": t["id"], "money_moved": False,
                     "explanation": "this exact payment was already made; nothing was paid again"}
         return {"paid": t["state"] in ("successful", "pending"), "decided_by": "Kaldrix allowed; Zentrix " + ("accepted" if t["state"] != "rejected" else "refused"),
-                "transaction_id": t["id"], "state": t["state"], "amount": naira(t["amount_minor"]), "reason": t.get("reject_code"), "explanation": t.get("detail"),
+                "transaction_id": t["id"], "state": t["state"], "amount": dollars(t["amount_minor"]), "reason": t.get("reject_code"), "explanation": t.get("detail"),
                 "money_moved": False, "note": "This is a pretend bank: no real money moves."}
     err = body.get("error") or {}
     return {"paid": False, "decided_by": "the platform", "reason": err.get("code") or f"http_{status}", "explanation": err.get("message") or json.dumps(body)[:200], "money_moved": False}

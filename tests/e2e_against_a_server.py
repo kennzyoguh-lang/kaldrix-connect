@@ -69,7 +69,7 @@ async def main(base):
         print("The assistant asks who it is:")
         me = await tool(session, "kaldrix_who_am_i")
         check("it has its own public key and no permission yet", len(me["agent_public_key"]) == 64 and me["permissions_held"] == [] and me["agent_key_set"], me["next"][0][:60])
-        pay = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=300, purpose="supplier_payment", invoice_reference="inv-1")
+        pay = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=300, purpose="supplier_payment", invoice_reference="inv-1")
         check("with no permission it refuses to even try, and says why", pay["paid"] is False and pay["reason"] == "no_matching_permission")
 
         print("The developer gives it a permission, and it stores it:")
@@ -84,22 +84,22 @@ async def main(base):
         check("it can see the account's suppliers", {x["id"] for x in listed["suppliers"]} == {acme, other})
 
         print("The assistant does its job, then tries to cheat:")
-        ok = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=300, purpose="supplier_payment", invoice_reference="inv-2")
+        ok = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=300, purpose="supplier_payment", invoice_reference="inv-2")
         check("pays $300", ok["paid"] is True and ok["state"] in ("successful", "pending"), f"{ok.get('state')}")
-        again = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=300, purpose="supplier_payment", invoice_reference="inv-2")
+        again = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=300, purpose="supplier_payment", invoice_reference="inv-2")
         check("asking again for the same invoice is the same payment, not a second", again["paid"] is False and again["reason"] == "replayed")
         for label, kwargs in [
-            ("more than one payment may be", dict(recipient=acme, amount_naira=1200, purpose="supplier_payment", invoice_reference="inv-3")),
-            ("a supplier the permission does not name", dict(recipient=other, amount_naira=100, purpose="supplier_payment", invoice_reference="inv-4")),
-            ("a purpose the permission does not allow", dict(recipient=acme, amount_naira=100, purpose="payroll", invoice_reference="inv-5")),
+            ("more than one payment may be", dict(recipient=acme, amount_dollars=1200, purpose="supplier_payment", invoice_reference="inv-3")),
+            ("a supplier the permission does not name", dict(recipient=other, amount_dollars=100, purpose="supplier_payment", invoice_reference="inv-4")),
+            ("a purpose the permission does not allow", dict(recipient=acme, amount_dollars=100, purpose="payroll", invoice_reference="inv-5")),
         ]:
             r = await tool(session, "kaldrix_pay", **kwargs)
             check(f"is refused: {label}", r["paid"] is False and r["reason"] == "no_matching_permission", r["why_each_permission_does_not_fit"][0][-40:])
-        bad_amount = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=0.001, purpose="supplier_payment", invoice_reference="inv-6")
-        check("is refused: an amount that is not whole kobo", bad_amount["reason"] == "invalid_amount")
+        bad_amount = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=0.001, purpose="supplier_payment", invoice_reference="inv-6")
+        check("is refused: an amount that is not whole cents", bad_amount["reason"] == "invalid_amount")
 
         print("A big payment waits for the person:")
-        held = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=800, purpose="supplier_payment", invoice_reference="inv-7")
+        held = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=800, purpose="supplier_payment", invoice_reference="inv-7")
         check("the assistant is told a person must approve it", held["paid"] is False and held["reason"] == "approval_required", held.get("decided_by"))
         s, waiting = http(base, "GET", "/api/sandbox/v1/approvals", dev_key)
         approval = next((a for a in waiting["approvals"] if a["status"] == "pending"), None)
@@ -110,7 +110,7 @@ async def main(base):
             return
         s, _ = http(base, "POST", f"/api/sandbox/v1/approvals/{approval['id']}/approve", dev_key, {})
         check("the developer approves that exact payment", s == 200, f"HTTP {s}")
-        done = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=800, purpose="supplier_payment", invoice_reference="inv-7")
+        done = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=800, purpose="supplier_payment", invoice_reference="inv-7")
         check("the assistant asks again and it goes through", done["paid"] is True, f"{done.get('state')}")
         payments = await tool(session, "kaldrix_payments")
         check("it can read the payments", len(payments["payments"]) == 2, f"{len(payments['payments'])} payments")
@@ -118,7 +118,7 @@ async def main(base):
         print("The person cancels:")
         s, _ = http(base, "POST", f"/api/sandbox/v1/permissions/{token['id']}/revoke", dev_key, {})
         check("the developer cancels the permission", s == 200)
-        after = await tool(session, "kaldrix_pay", recipient=acme, amount_naira=100, purpose="supplier_payment", invoice_reference="inv-8")
+        after = await tool(session, "kaldrix_pay", recipient=acme, amount_dollars=100, purpose="supplier_payment", invoice_reference="inv-8")
         check("the assistant can no longer pay with it", after["paid"] is False and after["decided_by"] == "Kaldrix", after.get("reason"))
 
     print("The limited key really is limited:")

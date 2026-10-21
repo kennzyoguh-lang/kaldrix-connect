@@ -45,7 +45,7 @@ class Proof(unittest.TestCase):
         key.public_key().verify(bytes.fromhex(a["signature"]), msg)
         other = proof.proof_message(t, "payments:recipient:dev_x-acme", "supplier_payment", 90_000, "USD", bytes.fromhex(a["nonce"]), a["issued_at_ms"])
         with self.assertRaises(Exception):
-            key.public_key().verify(bytes.fromhex(a["signature"]), other)  # a proof for N300 does not pay N900
+            key.public_key().verify(bytes.fromhex(a["signature"]), other)  # a proof for $300 does not pay $900
 
 
 class Money(unittest.TestCase):
@@ -54,7 +54,7 @@ class Money(unittest.TestCase):
         self.assertEqual(core.to_minor(1234.56), 123_456)
         for bad in (0, -5, 0.001, 10.005, "abc", None, float("nan")):
             self.assertIsNone(core.to_minor(bad), bad)
-        self.assertEqual(core.naira(123_456), "N1,234.56")
+        self.assertEqual(core.dollars(123_456), "$1,234.56")
 
 
 class Choosing(unittest.TestCase):
@@ -73,7 +73,7 @@ class Choosing(unittest.TestCase):
             "has not started": (token(me, not_before=NOW + 5_000), "dev_x-acme", "supplier_payment", 30_000),
             "does not name that supplier": (token(me), "dev_x-other", "supplier_payment", 30_000),
             "is for supplier_payment, not payroll": (token(me), "dev_x-acme", "payroll", 30_000),
-            "allows at most N1,000.00 a payment": (token(me), "dev_x-acme", "supplier_payment", 100_001),
+            "allows at most $1,000.00 a payment": (token(me), "dev_x-acme", "supplier_payment", 100_001),
         }
         for expected, (t, recipient, purpose, amount) in cases.items():
             got, why = core.choose([t], me, recipient, purpose, amount, NOW)
@@ -82,7 +82,7 @@ class Choosing(unittest.TestCase):
 
     def test_describe_reads_the_permission_in_plain_words(self):
         d = core.describe(token("aa" * 32), NOW)
-        self.assertEqual((d["may_pay"], d["purpose"], d["most_per_payment"], d["most_in_all"], d["a_person_must_approve_above"], d["expired"]), (["dev_x-acme"], "supplier_payment", "N1,000.00", "N3,000.00", "N500.00", False))
+        self.assertEqual((d["may_pay"], d["purpose"], d["most_per_payment"], d["most_in_all"], d["a_person_must_approve_above"], d["expired"]), (["dev_x-acme"], "supplier_payment", "$1,000.00", "$3,000.00", "$500.00", False))
         self.assertTrue(core.describe(token("aa" * 32, expires=NOW - 1), NOW)["expired"])
 
 
@@ -100,7 +100,7 @@ class Answers(unittest.TestCase):
 
     def test_a_payment_is_reported_honestly(self):
         ok = core.summarise(201, self.tx("successful"))
-        self.assertEqual((ok["paid"], ok["state"], ok["amount"], ok["money_moved"]), (True, "successful", "N300.00", False))
+        self.assertEqual((ok["paid"], ok["state"], ok["amount"], ok["money_moved"]), (True, "successful", "$300.00", False))
         self.assertIn("pretend", ok["note"])
         self.assertFalse(core.summarise(200, self.tx("successful", replay=True))["paid"], "a repeat is not paid again")
         self.assertFalse(core.summarise(201, self.tx("rejected"))["paid"])
