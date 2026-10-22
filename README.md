@@ -87,3 +87,5 @@ Make suppliers or permissions, approve or refuse a payment, cancel a permission,
 ## Rights
 
 All rights reserved. You may read this and use it with the Kaldrix service; see [NOTICE.md](NOTICE.md). It is not open source.
+
+<!-- mcp-name: io.github.kennzyoguh-lang/kaldrix-connect -->

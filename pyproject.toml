@@ -10,7 +10,13 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["mcp>=1.2", "cryptography>=42"]
 license = { file = "NOTICE.md" }
-authors = [{ name = "Kaldrix" }]
+authors = [{ name = "Oguh Chidiebube Kenneth" }]
+keywords = ["mcp", "ai-agents", "payments", "authorization", "agentic-payments", "kaldrix", "zentrix"]
+
+[project.urls]
+Homepage = "https://kennzyoguh-lang.github.io/kaldrix-zentrix/"
+Repository = "https://github.com/kennzyoguh-lang/kaldrix-connect"
+Challenge = "https://kennzyoguh-lang.github.io/kaldrix-zentrix/challenge.html"
 
 [project.scripts]
 kaldrix-connect = "kaldrix_connect.server:main"

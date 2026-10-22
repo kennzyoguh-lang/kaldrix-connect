@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.kennzyoguh-lang/kaldrix-connect",
+  "title": "Kaldrix and Zentrix",
+  "description": "Let an AI assistant pay suppliers inside a signed spending limit. Test service, pretend bank.",
+  "repository": {
+    "url": "https://github.com/kennzyoguh-lang/kaldrix-connect",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "kaldrix-connect",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "KALDRIX_URL",
+          "description": "Address of the Kaldrix test service. Defaults to the public test service.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "KALDRIX_AGENT_KEY",
+          "description": "The limited agent key from your own test account. It can pay inside a permission and read payments, nothing else.",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
