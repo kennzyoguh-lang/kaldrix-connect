@@ -115,6 +115,27 @@ def choose(tokens: list, my_public_hex: str, recipient_id: str, purpose: str, am
     return None, why
 
 
+def choose_data(tokens: list, my_public_hex: str, purpose: str, now_ms=None):
+    """The first data permission this agent holds that is for this purpose, is in its time window and was made for this agent's key."""
+    now = int(time.time() * 1000) if now_ms is None else now_ms
+    why = []
+    for t in tokens:
+        g, sc = leaf(t), leaf(t)["scope"]
+        if sc.get("audience") != "data-gateway":
+            continue
+        if g["subject_key"] != my_public_hex:
+            why.append(f"{t['id']}: was made for a different agent key")
+        elif sc.get("expires_at_ms") is not None and sc["expires_at_ms"] <= now:
+            why.append(f"{t['id']}: has expired")
+        elif sc.get("not_before_ms") is not None and sc["not_before_ms"] > now + START_GRACE_MS:
+            why.append(f"{t['id']}: has not started yet")
+        elif sc.get("purpose") is not None and sc["purpose"] != purpose:
+            why.append(f"{t['id']}: is for {sc['purpose']}, not {purpose}")
+        else:
+            return t, []
+    return None, why
+
+
 def payment_number(recipient: str, amount_minor: int, purpose: str, reference: str) -> str:
     """The payment's identity. The same supplier, amount, purpose and invoice is the same payment, never two, and a retry after a
     person approves is recognised as the payment that was waiting."""
@@ -125,6 +146,12 @@ def summarise(status: int, body: dict) -> dict:
     """What the assistant is told after a payment attempt: plain data about what was decided, by whom and why."""
     body = body or {}
     stage = body.get("stage")
+    if stage in ("statement_refused", "query_executed", "query_failed") or (stage == "authorization_denied" and "plan" in body):
+        a = body.get("authorization") or {}
+        if stage == "query_executed":
+            return {"ran": True, "decided_by": "Kaldrix", "result": body.get("result"), "what_it_touched": [n.get("description") for n in (body.get("plan") or {}).get("needs", [])]}
+        return {"ran": False, "decided_by": "Kaldrix", "reason": body.get("reason") or a.get("reason_code"), "explanation": body.get("detail") or a.get("detail"), "database_saw_nothing": True,
+                "tell_the_user": "The data gateway refused this request, so nothing ran. Do not try to get around it (no other table, no rewording to slip past); explain the reason to the person."}
     if stage == "authorization_denied":
         a = body.get("authorization") or {}
         return {"paid": False, "decided_by": "Kaldrix", "reason": a.get("reason_code"), "explanation": a.get("detail"), "money_moved": False,

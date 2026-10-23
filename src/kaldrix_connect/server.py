@@ -129,6 +129,37 @@ def kaldrix_pay(recipient: str, amount_dollars: float, purpose: str, invoice_ref
 
 
 @server.tool()
+def kaldrix_query(sql: str, purpose: str) -> str:
+    """Read or change rows in the person's database through the Kaldrix data gateway, using a data permission this agent holds. Send ONE statement.
+    `purpose` must be exactly the purpose the permission was issued for (for example customer_support). The gateway checks the permission against every
+    table, column and row the statement touches, the purpose and the time window, and runs the statement only if all of it is covered. A refusal is
+    final for that request: do not try another table or reword the statement to slip past it, explain it to the person. Today the gateway serves a built-in
+    demo database only."""
+    if not _key():
+        return _no_key()
+    me = _me()
+    now = core.server_now_ms(_base())
+    token, why = core.choose_data(state.permissions(), me, purpose, now)
+    if token is None:
+        return json.dumps({
+            "ran": False, "reason": "no_matching_data_permission", "database_saw_nothing": True,
+            "why_each_permission_does_not_fit": why,
+            "tell_the_user": "Ask the person to give this agent a data permission for this purpose (their dashboard or the data-permissions call), then add it with kaldrix_add_permission. Do not ask them for their account key.",
+        }, indent=2)
+    key = state.agent_key()
+    status, plan = core.call(_base(), _key(), "POST", "/api/v1/data-access/plan", {"database": "demo", "sql": sql})
+    if status != 200 or not plan.get("ok"):
+        return json.dumps({"ran": False, "reason": (plan or {}).get("refused", "statement_not_allowed"), "explanation": (plan or {}).get("detail"), "database_saw_nothing": True,
+                           "tell_the_user": "The statement was refused before any permission was looked at (one statement at a time; no schema changes, grants or unsafe functions)."}, indent=2)
+    body = {
+        "database": "demo", "sql": sql, "purpose": purpose, "token": token, "presenter": core.leaf(token)["subject"],
+        "proof": proof.sign_data_proof(key, token, plan["resource_to_sign"], purpose, now_ms=now),
+    }
+    status, resp = core.call(_base(), _key(), "POST", "/api/v1/data-access", body)
+    return json.dumps(core.summarise(status, resp), indent=2)
+
+
+@server.tool()
 def kaldrix_payment_status(transaction_id: str) -> str:
     """Ask where a payment stands, according to the (pretend) payment provider."""
     if not _key():

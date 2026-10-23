@@ -71,6 +71,11 @@ claude mcp add kaldrix -e KALDRIX_AGENT_KEY=kz_YOUR_AGENT_KEY -- uvx --from git+
 | `kaldrix_suppliers` | Who can be paid |
 | `kaldrix_pay` | Pay inside a permission: Kaldrix decides, Zentrix checks again and pays; a refusal comes back as plain words |
 | `kaldrix_payment_status`, `kaldrix_payments` | Where payments stand |
+| `kaldrix_query` | Read or change rows in the person's database through the data gateway, inside a **purpose-bound, time-bound data permission**: the gateway checks every table, column and row the statement touches. Today it serves a built-in demo database only |
+
+## Database access (new)
+
+A data permission says which tables, operations, columns or rows an agent may touch, **for what purpose**, and for **how long** (5 seconds to 24 hours). A request for payroll, a join to a table it was not given, a `DROP TABLE`, or the right query after the time has run out is refused, and the database sees nothing. The agent signs a proof for each exact statement, so a proof for one statement cannot be used for another. Try it with `tests/e2e_data_gateway.py`. The gateway serves one pretend database; it is not connected to any real one. Details: the Kaldrix docs, `docs/api/data-gateway.md`.
 
 ## What it can never do
 

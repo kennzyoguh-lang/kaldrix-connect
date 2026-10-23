@@ -45,17 +45,16 @@ def leaf_block_id(token: dict) -> str:
     return hashlib.sha256(sig).digest()[:12].hex()
 
 
-def proof_message(token: dict, resource: str, purpose, amount_minor: int, currency: str, nonce: bytes, issued_at_ms: int) -> bytes:
+def proof_message(token: dict, resource: str, purpose, amount_minor: int, currency: str, nonce: bytes, issued_at_ms: int, action: str = ACTION, spends: bool = True) -> bytes:
+    spend = b"\x01" + _string(currency) + struct.pack(">Q", amount_minor) if spends else b"\x00"
     return (
         _string("kaldrix.token.use.v2")
         + _string(token["id"])
         + _string(leaf_block_id(token))
-        + _string(ACTION)
+        + _string(action)
         + _string(resource)
         + _option(purpose)
-        + b"\x01"
-        + _string(currency)
-        + struct.pack(">Q", amount_minor)
+        + spend
         + _bytes(nonce)
         + struct.pack(">Q", issued_at_ms)
     )
@@ -65,4 +64,16 @@ def sign_proof(key: Ed25519PrivateKey, token: dict, recipient_id: str, purpose, 
     nonce = os.urandom(16)
     at = int(time.time() * 1000) if now_ms is None else now_ms
     msg = proof_message(token, f"payments:recipient:{recipient_id}", purpose, amount_minor, currency, nonce, at)
+    return {"nonce": nonce.hex(), "issued_at_ms": at, "signature": key.sign(msg).hex()}
+
+
+DATA_ACTION = "db.query"
+
+
+def sign_data_proof(key: Ed25519PrivateKey, token: dict, resource: str, purpose, now_ms=None) -> dict:
+    """A proof for one database statement: the action `db.query` and the resource the data gateway names for that exact statement
+    (`db:<database>:sql:<hash of the text>`), with the purpose and no amount. A proof for one statement is useless for another."""
+    nonce = os.urandom(16)
+    at = int(time.time() * 1000) if now_ms is None else now_ms
+    msg = proof_message(token, resource, purpose, 0, "", nonce, at, action=DATA_ACTION, spends=False)
     return {"nonce": nonce.hex(), "issued_at_ms": at, "signature": key.sign(msg).hex()}
