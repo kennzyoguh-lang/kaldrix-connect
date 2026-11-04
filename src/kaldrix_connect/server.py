@@ -1,4 +1,4 @@
-"""The Kaldrix connector: lets an AI assistant (Claude, Copilot, Cursor, Codex and others that speak MCP) pay with a limited permission.
+"""The Kaldrix connector: lets an AI assistant (Copilot, Cursor, Codex and others that speak MCP) pay with a limited permission.
 
 The assistant sees a few ordinary tools. Behind `kaldrix_pay`, this process holds the agent's own key and the permissions it was given,
 signs a proof for exactly the payment asked for, and sends it to the Kaldrix service, where Kaldrix decides and Zentrix checks again.
