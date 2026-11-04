@@ -73,7 +73,7 @@ async def main(base):
 
         print("The developer gives it a data permission:")
         s, v = http(base, "POST", "/api/sandbox/v1/data-permissions", dev_key, {
-            "subject": "assistant", "subject_key": me["agent_public_key"], "purpose": "customer_support", "ttl_ms": 600_000,
+            "subject": "claude", "subject_key": me["agent_public_key"], "purpose": "customer_support", "ttl_ms": 600_000,
             "grants": [
                 {"table": "support_tickets", "operations": ["read"]},
                 {"table": "customers", "operations": ["read"], "columns": ["id", "name", "plan"]},

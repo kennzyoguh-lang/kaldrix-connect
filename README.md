@@ -12,7 +12,7 @@ An AI agent that can spend money is only safe if the limit lives *outside* the a
 |---|---|
 | **Kaldrix** (the permission) | A signed, limited permission: who may be paid, how much per payment and in all, for what purpose, until when. It can only be narrowed when passed on, never widened. You can cancel it at any moment. |
 | **Zentrix** (the conditional escrow and execution clearinghouse) | Moves money only when the agent proves it stayed inside its exact instructions. It checks Kaldrix's yes again on its own, applies its own limits, never pays the same invoice twice, tells the truth when the bank has not answered ("unknown", never a guess), and returns a **signed proof envelope** with every payment: who held the permission, the exact amount, supplier and purpose, and the time limits. |
-| **This connector** | Lets Cursor, Copilot, Codex and other MCP assistants use both. The assistant holds its own key; only signatures leave your computer. |
+| **This connector** | Lets Claude, Cursor, Copilot, Codex and other MCP assistants use both. The assistant holds its own key; only signatures leave your computer. |
 
 ## How this is different
 
@@ -27,7 +27,7 @@ You can see all of this yourself in the test service: press **Run the demo for m
 
 > **This is a test service. It is a pretend bank: no real money moves.** It is a first version with no independent security review. Read [SECURITY.md](SECURITY.md).
 
-Works with assistants that speak [MCP](https://modelcontextprotocol.io): Cursor, GitHub Copilot in VS Code, Codex and others. ChatGPT needs a hosted connector, which is not built yet.
+Works with assistants that speak [MCP](https://modelcontextprotocol.io): Claude (Code and Desktop), Cursor, GitHub Copilot in VS Code, Codex and others. ChatGPT needs a hosted connector, which is not built yet.
 
 ## Work with us
 

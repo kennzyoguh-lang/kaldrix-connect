@@ -73,7 +73,7 @@ async def main(base):
         check("with no permission it refuses to even try, and says why", pay["paid"] is False and pay["reason"] == "no_matching_permission")
 
         print("The developer gives it a permission, and it stores it:")
-        s, v = http(base, "POST", "/api/sandbox/v1/permissions", dev_key, {"subject": "assistant", "subject_key": me["agent_public_key"], "recipients": ["acme"], "max_per_payment_minor": 100_000, "max_total_minor": 300_000, "approval_above_minor": 50_000})
+        s, v = http(base, "POST", "/api/sandbox/v1/permissions", dev_key, {"subject": "claude", "subject_key": me["agent_public_key"], "recipients": ["acme"], "max_per_payment_minor": 100_000, "max_total_minor": 300_000, "approval_above_minor": 50_000})
         check("a permission is issued for the assistant's public key", s == 200, f"HTTP {s}")
         token = v["token"]
         wrong = await tool(session, "kaldrix_add_permission", permission_json="not json")
