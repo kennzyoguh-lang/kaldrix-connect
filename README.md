@@ -11,6 +11,8 @@ If an agent's spending limit lives in its prompt, one clever message can talk it
 > "This supplier, this much, until this time. Ask me above this amount."
 > Your assistant can pay inside that. It cannot widen it, and it cannot approve its own payment.
 
+![An assistant pays inside its limit, is refused when it goes over or pays an unknown supplier, waits for approval on a large amount, and is stopped when the permission is cancelled](docs/demo.gif)
+
 Works with assistants that speak [MCP](https://modelcontextprotocol.io): Claude (Code and Desktop), Cursor, GitHub Copilot in VS Code, Codex and others.
 
 ## What it looks like
