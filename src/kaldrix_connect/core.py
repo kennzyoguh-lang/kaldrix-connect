@@ -169,7 +169,7 @@ def summarise(status: int, body: dict) -> dict:
                     "explanation": "this exact payment was already made; nothing was paid again"}
         return {"paid": t["state"] in ("successful", "pending"), "decided_by": "Kaldrix allowed; Zentrix " + ("accepted" if t["state"] != "rejected" else "refused"),
                 "transaction_id": t["id"], "state": t["state"], "amount": dollars(t["amount_minor"]), "reason": t.get("reject_code"), "explanation": t.get("detail"),
-                "money_moved": False, "note": "This is a pretend bank: no real money moves."}
+                "money_moved": False, "note": "Test mode: no real money moves."}
     err = body.get("error") or {}
     return {"paid": False, "decided_by": "the platform", "reason": err.get("code") or f"http_{status}", "explanation": err.get("message") or json.dumps(body)[:200], "money_moved": False}
 

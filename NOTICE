@@ -1,0 +1,11 @@
+Kaldrix Connect
+Copyright 2026 Oguh Chidiebube Kenneth
+
+This repository is licensed under the Apache License, Version 2.0. See the file LICENSE.
+
+The licence covers the code in this repository: the connector, its skill, its command, its tests and its documents. The Kaldrix permission
+engine, the Zentrix payment engine and the hosted Kaldrix service are not part of this repository and are not covered by this licence. Using
+the hosted service is subject to the testing agreement you accept when you sign up for a test account.
+
+"Kaldrix", "Zentrix" and their logos are names and marks of the author. The licence does not grant permission to use them, except to describe
+where this software comes from.

@@ -101,7 +101,7 @@ class Answers(unittest.TestCase):
     def test_a_payment_is_reported_honestly(self):
         ok = core.summarise(201, self.tx("successful"))
         self.assertEqual((ok["paid"], ok["state"], ok["amount"], ok["money_moved"]), (True, "successful", "$300.00", False))
-        self.assertIn("pretend", ok["note"])
+        self.assertIn("no real money", ok["note"])
         self.assertFalse(core.summarise(200, self.tx("successful", replay=True))["paid"], "a repeat is not paid again")
         self.assertFalse(core.summarise(201, self.tx("rejected"))["paid"])
 

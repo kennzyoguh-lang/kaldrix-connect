@@ -2,7 +2,7 @@
   "name": "kaldrix",
   "owner": { "name": "Kaldrix" },
   "metadata": {
-    "description": "Kaldrix and Zentrix for your AI assistant. Kaldrix is the signed, limited permission; Zentrix is the payment desk that checks it again and pays. A person sets the limits; the assistant cannot widen them or approve its own payment. Test service: no real money."
+    "description": "Kaldrix and Zentrix for your AI assistant. Kaldrix is the signed, limited permission; Zentrix is the payment desk that checks it again and pays. A person sets the limits; the assistant cannot widen them or approve its own payment. Runs in test mode: no real money moves."
   },
   "plugins": [
     {
@@ -13,7 +13,7 @@
       "author": { "name": "Kaldrix" },
       "homepage": "https://kaldrix-sandbox.onrender.com",
       "repository": "https://github.com/kennzyoguh-lang/kaldrix-connect",
-      "license": "LicenseRef-Kaldrix-Proprietary",
+      "license": "Apache-2.0",
       "keywords": ["kaldrix", "zentrix", "agentic-payments", "ai-agents", "ai-agent-security", "payments", "mcp", "authorization", "permissions"],
       "category": "workflow",
       "tags": ["payments", "security", "agents"],

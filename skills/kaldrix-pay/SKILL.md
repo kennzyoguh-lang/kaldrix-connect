@@ -5,7 +5,7 @@ description: Use when the person asks you to pay a supplier, set up Kaldrix, or 
 
 # Paying with Kaldrix
 
-Kaldrix (the signed permission) and Zentrix (the payment desk that checks it again and pays) let you pay suppliers **only inside limits a person signed**. This is a test service: it is a pretend bank and no real money moves.
+Kaldrix (the signed permission) and Zentrix (the payment desk that checks it again and pays) let you pay suppliers **only inside limits a person signed**. The service runs in test mode: no real money moves.
 
 ## Rules you always follow
 

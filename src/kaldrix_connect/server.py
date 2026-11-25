@@ -58,7 +58,7 @@ def kaldrix_who_am_i() -> str:
         nxt.append(f"Give this agent a permission: in the dashboard ({_base()}), step 3, open \"Use my own agent's key instead\", paste the public key below, and give it a permission. Copy the permission it shows and call kaldrix_add_permission with it.")
     if ready and perms:
         nxt.append("Ready. Call kaldrix_suppliers to see who can be paid, then kaldrix_pay.")
-    return json.dumps({"agent_public_key": _me(), "service": _base(), "agent_key_set": ready, "permissions_held": perms, "next": nxt, "this_is": "a pretend bank: no real money moves"}, indent=2)
+    return json.dumps({"agent_public_key": _me(), "service": _base(), "agent_key_set": ready, "permissions_held": perms, "next": nxt, "this_is": "test mode: no real money moves"}, indent=2)
 
 
 @server.tool()
@@ -161,7 +161,7 @@ def kaldrix_query(sql: str, purpose: str) -> str:
 
 @server.tool()
 def kaldrix_payment_status(transaction_id: str) -> str:
-    """Ask where a payment stands, according to the (pretend) payment provider."""
+    """Ask where a payment stands, according to the test payment provider."""
     if not _key():
         return _no_key()
     status, body = core.call(_base(), _key(), "POST", f"/api/zentrix/v1/payments/{transaction_id}/refresh", {})

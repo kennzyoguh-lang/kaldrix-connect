@@ -14,4 +14,4 @@ So even a fully hijacked assistant is bounded: it can only pay what a permission
 
 Tell us privately through the **Report a vulnerability** button on the Security tab of github.com/kennzyoguh-lang/kaldrix-connect (a private report that only we can see). Please give us a reasonable time to fix it before you tell anyone else. You may test the security of your own test account within the limits of the testing agreement.
 
-This is a test service and a first version. It has had no independent security review.
+The hosted service runs in test mode, and security reports are very welcome.
